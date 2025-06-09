@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SACHIYA EDITZ 🎶</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff4081;
+      --dark: #111;
+      --light: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #6e00ff, #ff4081, #ff9800);
+      background-size: 300% 300%;
+      animation: gradientMove 10s ease infinite;
+      color: var(--light);
+    }
+
+    @keyframes gradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5em;
+      margin-top: 30px;
+      animation: typing 3s steps(12), blink .6s step-end infinite alternate;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid;
+      width: 18ch;
+      margin: 20px auto;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+    }
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 10px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+    }
+
+    form, .song-list {
+      max-width: 600px;
+      margin: 30px auto;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      color: #111;
+      font-size: 1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1em;
+      box-shadow: 0 0 15px var(--primary);
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e91e63;
+      box-shadow: 0 0 20px #ff4081;
+    }
+
+    .song-item {
+      margin-top: 20px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 15px;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .watermark {
+      font-size: 12px;
+      color: #ffddf4;
+    }
+
+    .wave {
+      height: 3px;
+      background: #ff4081;
+      animation: waveMove 1.2s linear infinite;
+    }
+
+    @keyframes waveMove {
+      0% { width: 0% }
+      50% { width: 80% }
+      100% { width: 0% }
+    }
+
+    .ads {
+      text-align: center;
+      margin-top: 40px;
+      color: #ffe6ff;
+    }
+
+    /* Dark mode toggle */
+    body.dark {
+      background: #111;
+      color: #eee;
+    }
+    body.dark form, body.dark .song-list {
+      background: #222;
+    }
+    body.dark input, body.dark textarea {
+      background: #333;
+      color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>SACHIYA EDITZ</h1>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+  <form id="uploadForm">
+    <input type="text" placeholder="Title" required />
+    <input type="text" placeholder="Artist" required />
+    <input type="text" placeholder="Category" />
+    <textarea placeholder="Description"></textarea>
+    <input type="text" placeholder="URL Slug" />
+    <input type="file" accept="audio/mp3" required />
+    <input type="file" accept="image/*" required />
+    <button type="submit">Upload Song</button>
+  </form>
+
+  <div class="song-list" id="songList">
+    <h2>Uploaded Songs</h2>
+  </div>
+
+  <div class="ads">
+    <h3>Advertisement</h3>
+    <p>[Your ad here]</p>
+  </div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const songList = document.getElementById("songList");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const [title, artist, category, description, urlSlug, audioFile, coverImage] =
+        [...form.querySelectorAll("input, textarea")];
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const audioUrl = e.target.result;
+        const songItem = document.createElement("div");
+        songItem.className = "song-item";
+        songItem.innerHTML = `
+          <h3>${title.value} <span class="watermark">by ${artist.value} | SACHIYA EDITZ</span></h3>
+          <div class="wave"></div>
+          <p><strong>Category:</strong> ${category.value}</p>
+          <p>${description.value}</p>
+          <audio controls src="${audioUrl}"></audio>
+          <p><a href="${audioUrl}" download="${title.value}.mp3">Download MP3</a></p>
+        `;
+        songList.appendChild(songItem);
+        form.reset();
+      };
+      reader.readAsDataURL(audioFile.files[0]);
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+  </script>
+</body>
+</html>
+
